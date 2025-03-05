@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hack NASA</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Courier New', Courier, monospace;
+        background: black;
+        color: lime;
+        text-align: center;
+    }
+    .warning {
+        color: yellow;
+        font-size: 4em;
+        position: fixed;
+        top: 20px;
+        width: 100%;
+        animation: blinker 1s linear infinite;
+    }
+    @keyframes blinker {
+        50% { opacity: 0; }
+    }
+    #countdown {
+        color: yellow;
+        font-size: 12em;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+    }
+    #scarySkull {
+        width: 100vw;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0); /* Initially scaled down */
+        display: none; /* Initially hidden */
+        transition: transform 0.5s ease-in-out; /* Smooth scaling */
+    }
+    #logs {
+        position: fixed;
+        top: 10vh;
+        left: 5%;
+        right: 5%;
+        bottom: 50vh;
+        padding: 20px;
+        overflow-y: auto;
+        color: red;
+        font-size: 16px;
+        background: rgba(0, 0, 0, 0.8);
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h1 class="warning">WARNING: SYSTEM HACKED!</h1>
+    <div id="logs"></div>
+    <div id="countdown"></div>
+    <img src="watercolor_skull.png" alt="Menacing Skull" id="scarySkull">
+    <script>
+        $(document).ready(function(){
+            const logs = [
+                "Fetching update from server...",
+                "Received package 1 of 5",
+                "Received package 2 of 5",
+                "Received package 3 of 5",
+                "Received package 4 of 5",
+                "Received package 5 of 5",
+                "Update complete. System reboot required.",
+                "Rebooting in 5... 4... 3... 2... 1..."
+            ];
+            let i = 0;
+            function runLogs() {
+                if (i < logs.length) {
+                    $('#logs').append($('<div>').text(logs[i]));
+                    $('#logs').scrollTop($('#logs')[0].scrollHeight);
+                    i++;
+                    setTimeout(runLogs, 500); // Speed up the log display
+                } else {
+                    $('#logs').hide(); // Hide logs
+                    startCountdown(); // Start countdown after logs are done
+                }
+            }
+            runLogs();
+
+            function startCountdown() {
+                let count = 5;
+                $('#countdown').text(count);
+                const countdown = setInterval(() => {
+                    count--;
+                    $('#countdown').text(count);
+                    if (count <= 0) {
+                        clearInterval(countdown);
+                        $('#countdown').hide();
+                        showSkull();
+                    }
+                }, 700); // Rapid countdown every 700 milliseconds
+            }
+
+            function showSkull() {
+                const skull = $('#scarySkull');
+                skull.show();
+                skull.css('transform', 'translate(-50%, -50%) scale(1)'); // Scale up the skull
+                shakeSkull(); // Start shaking after fully visible
+            }
+
+            function shakeSkull() {
+                const shakeTime = 50;
+                setInterval(() => {
+                    $('#scarySkull')
+                        .animate({left: '+=2%'}, shakeTime)
+                        .animate({left: '-=4%'}, shakeTime)
+                        .animate({left: '+=4%'}, shakeTime)
+                        .animate({left: '-=4%'}, shakeTime)
+                        .animate({left: '+=4%'}, shakeTime)
+                        .animate({left: '-=2%'}, shakeTime);
+                }, 300); // Continuous shaking effect
+            }
+        });
+    </script>
+</body>
+</html>
